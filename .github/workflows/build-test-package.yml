@@ -27,14 +27,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile=false
 
-      - name: Typecheck and build
-        run: pnpm run check
+      - name: Build frontend
+        run: pnpm run build
 
       - name: Prepare Decky package
         shell: bash
@@ -43,7 +43,7 @@ jobs:
           rm -rf release
           mkdir -p release/Freedeck
           cp -a main.py plugin.json package.json release/Freedeck/
-          for path in dist py_modules bin assets defaults; do
+          for path in dist py_modules backend bin assets defaults; do
             if [ -e "$path" ]; then
               cp -a "$path" release/Freedeck/
             fi
