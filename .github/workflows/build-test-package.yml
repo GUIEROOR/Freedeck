@@ -1,0 +1,61 @@
+name: Build Freedeck test package
+
+on:
+  push:
+    branches:
+      - agent/steamos-compat-performance
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Typecheck and build
+        run: pnpm run check
+
+      - name: Prepare Decky package
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -rf release
+          mkdir -p release/Freedeck
+          cp -a main.py plugin.json package.json release/Freedeck/
+          for path in dist py_modules bin assets defaults; do
+            if [ -e "$path" ]; then
+              cp -a "$path" release/Freedeck/
+            fi
+          done
+          if [ -f LICENSE ]; then cp LICENSE release/Freedeck/; fi
+          if [ -f README.md ]; then cp README.md release/Freedeck/; fi
+          find release/Freedeck -type d -name __pycache__ -prune -exec rm -rf {} +
+          find release/Freedeck -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+          cd release
+          zip -9 -r ../Freedeck-0.3.0-steamos-test.zip Freedeck
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Freedeck-0.3.0-steamos-test
+          path: Freedeck-0.3.0-steamos-test.zip
+          if-no-files-found: error
+          retention-days: 30
