@@ -1,30 +1,31 @@
 {
-  "name": "Freedeck",
-  "version": "0.2",
-  "description": "一站式管理学习版游戏",
+  "name": "freedeck",
+  "version": "0.3.0",
+  "description": "Steam Deck game library, transfer and cloud-save management plugin",
   "type": "module",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm run typecheck && pnpm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SteamDeckHomebrew/decky-plugin-template.git"
+    "url": "git+https://github.com/GUIEROOR/Freedeck.git"
   },
   "keywords": [
     "decky",
     "plugin",
     "freedeck",
     "steam-deck",
-    "deck"
+    "steamos"
   ],
-  "author": "Panyiwei",
+  "author": "Panyiwei and contributors",
   "license": "LGPL-2.1",
   "bugs": {
-    "url": "https://github.com/SteamDeckHomebrew/decky-plugin-template/issues"
+    "url": "https://github.com/GUIEROOR/Freedeck/issues"
   },
-  "homepage": "https://github.com/SteamDeckHomebrew/decky-plugin-template#readme",
+  "homepage": "https://github.com/GUIEROOR/Freedeck#readme",
   "devDependencies": {
     "@decky/rollup": "^1.0.2",
     "@decky/ui": "^4.11.0",
